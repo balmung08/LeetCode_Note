@@ -29,11 +29,9 @@ class Solution:
             slow = slow.next
             fast = fast.next.next if fast.next is not None else fast.next
         # 反转后半段
-
         while slow is not None:
             slow.next, slow, prev = prev, slow.next, slow
         # 后半段和原链表比较，原链表不需要切
-
         while head and prev:
             if head.val != prev.val:
                 return False
