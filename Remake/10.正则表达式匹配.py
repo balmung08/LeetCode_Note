@@ -39,28 +39,27 @@ class Solution:
 # "aaaa"\n"a*"\n
 '''
 # 常规的DP思路
+# https://leetcode.cn/problems/regular-expression-matching/solutions/2361807/10-zheng-ze-biao-da-shi-pi-pei-dong-tai-m5z1i/
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
-        def match(charS: str, charP: str) -> bool:
-            return charP == '.' or charP == charS
-
-        lenS, lenP = len(s), len(p)
-        dp = [[False] * (lenS+1) for _ in range(lenP+1)]
+        m, n = len(s) + 1, len(p) + 1
+        dp = [[False] * n for _ in range(m)]
         dp[0][0] = True
-
-        for i in range(1, lenP+1):
-            if p[i-1] == '*':
-                dp[i][0] = dp[i-2][0]
-        for i in range(1, lenP+1):
-            for j in range(1, lenS+1):
-                if p[i-1] == '*':
-                    if match(s[j-1], p[i-2]):
-                        dp[i][j] = dp[i-2][j] or dp[i][j-1]
-                    else:
-                        dp[i][j] = dp[i-2][j]
+        # 初始化首行
+        for j in range(2, n, 2):
+            dp[0][j] = dp[0][j - 2] and p[j - 1] == '*'
+        # 状态转移
+        for i in range(1, m):
+            for j in range(1, n):
+                if p[j - 1] == '*':
+                    if dp[i][j - 2]: dp[i][j] = True                              # 1.
+                    elif dp[i - 1][j] and s[i - 1] == p[j - 2]: dp[i][j] = True   # 2.
+                    elif dp[i - 1][j] and p[j - 2] == '.': dp[i][j] = True        # 3.
                 else:
-                    dp[i][j] = match(s[j-1], p[i-1]) and dp[i-1][j-1]
-        
+                    if dp[i - 1][j - 1] and s[i - 1] == p[j - 1]: dp[i][j] = True # 1.
+                    elif dp[i - 1][j - 1] and p[j - 1] == '.': dp[i][j] = True    # 2.
         return dp[-1][-1]
+
+
 # @lc code=end
 
