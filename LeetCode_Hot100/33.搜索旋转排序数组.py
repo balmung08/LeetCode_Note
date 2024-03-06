@@ -73,6 +73,29 @@ class Solution:
                         else: 
                             head = midpoint + 1 
                 return -1
+# ----------------------------------
+# 中点值比初始值大的时候说明两者夹起来的部分是有序的
+# 如果在有序部分里，就把无序部分丢了
+# 如果不在有序部分里，则在无序部分里接着找
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        first = 0
+        last = len(nums)-1
+        while last >= first:
+            if nums[(last+first)//2]==target:
+                return (last+first)//2
+            # 左半段有序  
+            if nums[(last+first)//2]>=nums[first]:
+                if nums[first]<= target <= nums[(last+first)//2]:
+                    last = (last+first)//2-1
+                else:
+                    first = (last+first)//2+1
+            else:
+                if nums[(last+first)//2]<= target <= nums[last]:
+                    first = (last+first)//2+1
+                else:
+                    last = (last+first)//2-1
+        return -1
 
 # @lc code=end
 
